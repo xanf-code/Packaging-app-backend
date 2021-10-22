@@ -72,6 +72,25 @@ const addDetails = async (req: Request, res: Response) => {
     }
 };
 
+const updateDetails = async (req: Request, res: Response) => {
+    try {
+        const options = { returnNewDocument: true };
+        const id = req.params.id;
+        const updates: IDetails = req.body;
+        const details: IDetails | null = await Details.findByIdAndUpdate(id, updates, options);
+        res.status(200).json({
+            status: "success",
+            data: details,
+        });
+    }
+    catch (err) {
+        res.status(400).json({
+            status: "fail",
+            message: err.message,
+        });
+    }
+}
+
 const deleteDetails = async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
@@ -89,4 +108,4 @@ const deleteDetails = async (req: Request, res: Response) => {
     }
 }
 
-export { getDetails, getByName, addDetails, deleteDetails };
+export { getDetails, getByName, addDetails, deleteDetails, updateDetails };
