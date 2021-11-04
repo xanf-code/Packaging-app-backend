@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import Details from "../../models/details";
+import User from "../../models/users";
 import { IDetails } from "../../types/details";
 import { handleQuerySort } from "../../helpers/sorting";
 import { Query } from "../../types/query";
+import { IUsers } from "../../types/users";
 
 const getDetails = async (req: Request, res: Response) => {
     try {
@@ -108,4 +110,37 @@ const deleteDetails = async (req: Request, res: Response) => {
     }
 }
 
-export { getDetails, getByName, addDetails, deleteDetails, updateDetails };
+const updateUsers = async (req: Request, res: Response) => {
+    try {
+        const options = { returnNewDocument: true };
+        const id = req.params.id;
+        const updates = req.body;
+        const details = await User.findByIdAndUpdate(id, updates, options);
+        res.status(200).json({
+            status: "success",
+            data: details,
+        });
+    }
+    catch (err) {
+        res.status(400).json({
+            status: "fail",
+            message: err.message,
+        });
+    }
+}
+
+const getUserById = async (req: Request, res: Response) => {
+    try {
+        var id = req.params.id;
+        const details = await User.findById(id, '-_id');
+        res.send(details)
+    }
+    catch (err) {
+        res.status(400).json({
+            status: "fail",
+            message: err.message,
+        });
+    }
+}
+
+export { getDetails, getByName, addDetails, deleteDetails, updateDetails, updateUsers, getUserById };
